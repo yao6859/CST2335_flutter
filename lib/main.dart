@@ -55,28 +55,42 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var _counter = 0.0;
+  // var _counter = 0.0;
   var myFontSize = 30.0;
+  late TextEditingController _controller;
+  var imageSource = "images/question-mark.png";
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
 
   void setNewValue(double value)
   {
     setState(() {
-      _counter = value;
+      // _counter = value;
       myFontSize = value;
     });
   }
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      if(_counter < 99.0)
-      _counter++;
-    });
-  }
+  // void _incrementCounter() {
+  //   setState(() {
+  //     // This call to setState tells the Flutter framework that something has
+  //     // changed in this State, which causes it to rerun the build method below
+  //     // so that the display can reflect the updated values. If we changed
+  //     // _counter without calling setState(), then the build method would not be
+  //     // called again, and so nothing would appear to happen.
+  //     // if(_counter < 99.0)
+  //     //   _counter++;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -115,23 +129,47 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-              style: TextStyle(fontSize: myFontSize),
-            ),
-            Text(
-              '$_counter',
-              style: TextStyle(fontSize: myFontSize),
-            ),
-            Slider(value:_counter, max:100.0, onChanged: setNewValue, min:0.0)
+            // Text(
+            //   'You have pushed the button this many times:',
+            //   style: TextStyle(fontSize: myFontSize),
+            // ),
+            // Text(
+            //   '$_counter',
+            //   style: TextStyle(fontSize: myFontSize),
+            // ),
+            // Slider(value:_counter, max:100.0, onChanged: setNewValue, min:0.0)
+            const TextField(decoration: InputDecoration(
+                              hintText:"Type here",
+                              border: OutlineInputBorder(),
+                              labelText: "Login"
+                  )),
+            TextField(controller: _controller, obscureText: true,
+                decoration: const InputDecoration(
+                    hintText:"Type here",
+                    border: OutlineInputBorder(),
+                    labelText: "Password",
+                )),
+            ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    var myText = _controller.value.text;
+                    if (myText == "QWERTY123") {
+                      imageSource = "images/idea.png";
+                    } else {
+                      imageSource = "images/stop.png";
+                    }
+                  });
+                },
+                child: const Text("Login", style: TextStyle(fontSize: 25, color: Colors.blue))),
+            Image.asset(imageSource, width:200, height:200)
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: _incrementCounter,
+      //   tooltip: 'Increment',
+      //   child: const Icon(Icons.add),
+      // ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
