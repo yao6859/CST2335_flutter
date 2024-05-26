@@ -7,27 +7,12 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
@@ -39,15 +24,6 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -55,121 +31,211 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // var _counter = 0.0;
-  var myFontSize = 30.0;
-  late TextEditingController _controller;
-  var imageSource = "images/question-mark.png";
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _controller.dispose();
-  }
-
-  void setNewValue(double value)
-  {
-    setState(() {
-      // _counter = value;
-      myFontSize = value;
-    });
-  }
-
-  // void _incrementCounter() {
-  //   setState(() {
-  //     // This call to setState tells the Flutter framework that something has
-  //     // changed in this State, which causes it to rerun the build method below
-  //     // so that the display can reflect the updated values. If we changed
-  //     // _counter without calling setState(), then the build method would not be
-  //     // called again, and so nothing would appear to happen.
-  //     // if(_counter < 99.0)
-  //     //   _counter++;
-  //   });
-  // }
+  var myFontSize = 20.0;
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    double screenWidth = MediaQuery.of(context).size.width;
+    double radius = screenWidth * 0.1;
+
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      //   title: Text(widget.title),
+      // ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            // Text(
-            //   'You have pushed the button this many times:',
-            //   style: TextStyle(fontSize: myFontSize),
-            // ),
-            // Text(
-            //   '$_counter',
-            //   style: TextStyle(fontSize: myFontSize),
-            // ),
-            // Slider(value:_counter, max:100.0, onChanged: setNewValue, min:0.0)
-            const TextField(decoration: InputDecoration(
-                              hintText:"Type here",
-                              border: OutlineInputBorder(),
-                              labelText: "Login"
-                  )),
-            TextField(controller: _controller, obscureText: true,
-                decoration: const InputDecoration(
-                    hintText:"Type here",
-                    border: OutlineInputBorder(),
-                    labelText: "Password",
-                )),
-            ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    var myText = _controller.value.text;
-                    if (myText == "QWERTY123") {
-                      imageSource = "images/idea.png";
-                    } else {
-                      imageSource = "images/stop.png";
-                    }
-                  });
-                },
-                child: const Text("Login", style: TextStyle(fontSize: 25, color: Colors.blue))),
-            Image.asset(imageSource, width:200, height:200)
+            const Text("BROWSE CATEGORIES",
+              style: TextStyle(fontSize: 30.0,
+                     fontWeight: FontWeight.bold),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(left: 10.0, right: 10.0),
+              child: Text(
+                "Not sure about exactly which recipe you're looking for? Do a research, or dive into our most popular categories.",
+                textAlign: TextAlign.left,
+                style: TextStyle(fontSize: 15.0),
+              ),
+            ),
+            const Text("BY MEAT",
+              style: TextStyle(fontSize: 25.0,
+                  fontWeight: FontWeight.bold),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Stack(
+                  alignment: Alignment.center,
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: radius,
+                      backgroundImage: const AssetImage("images/beef.jpg"),
+                    ),
+                    const Text("BEEF",
+                      style: TextStyle(fontSize: 25.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,),
+                    ),
+                  ]),
+                Stack(
+                    alignment: Alignment.center,
+                    children: <Widget>[
+                      CircleAvatar(
+                        radius: radius,
+                        backgroundImage: const AssetImage("images/chicken.jpg"),
+                      ),
+                      const Text("CHICKEN",
+                        style: TextStyle(fontSize: 25.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,),
+                      ),
+                    ]),
+                Stack(
+                    alignment: Alignment.center,
+                    children: <Widget>[
+                      CircleAvatar(
+                        radius: radius,
+                        backgroundImage: const AssetImage("images/pork.jpg"),
+                      ),
+                      const Text("PORK",
+                        style: TextStyle(fontSize: 25.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,),
+                      ),
+                    ]),
+                Stack(
+                    alignment: Alignment.center,
+                    children: <Widget>[
+                      CircleAvatar(
+                        radius: radius,
+                        backgroundImage: const AssetImage("images/seafood.jpg"),
+                      ),
+                      const Text("SEAFOOD",
+                        style: TextStyle(fontSize: 25.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,),
+                      ),
+                    ]),
           ],
         ),
-      ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _incrementCounter,
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.add),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+            const Text("BY COURSE",
+              style: TextStyle(fontSize: 25.0,
+                  fontWeight: FontWeight.bold),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: <Widget>[
+                      CircleAvatar(
+                        radius: radius,
+                        backgroundImage: const AssetImage("images/main_dish.jpg"),
+                      ),
+                      const Text("Main Dishes",
+                        style: TextStyle(fontSize: 15.0,
+                          fontWeight: FontWeight.bold),
+                      ),
+                    ]),
+                Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: <Widget>[
+                      CircleAvatar(
+                        radius: radius,
+                        backgroundImage: const AssetImage("images/salad.jpg"),
+                      ),
+                      const Text("Salad Recipes",
+                        style: TextStyle(fontSize: 15.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ]),
+                Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: <Widget>[
+                      CircleAvatar(
+                        radius: radius,
+                        backgroundImage: const AssetImage("images/side_dish.jpg"),
+                      ),
+                      const Text("Side Dishes",
+                        style: TextStyle(fontSize: 15.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ]),
+                Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: <Widget>[
+                      CircleAvatar(
+                        radius: radius,
+                        backgroundImage: const AssetImage("images/crockpot.jpg"),
+                      ),
+                      const Text("Crockpot",
+                        style: TextStyle(fontSize: 15.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ]),
+              ],
+            ),
+            const Text("BY DESSERT",
+              style: TextStyle(fontSize: 25.0,
+                  fontWeight: FontWeight.bold),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: <Widget>[
+                      CircleAvatar(
+                        radius: radius,
+                        backgroundImage: const AssetImage("images/ice_cream.jpg"),
+                      ),
+                      const Text("Ice Cream",
+                        style: TextStyle(fontSize: 15.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ]),
+                Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: <Widget>[
+                      CircleAvatar(
+                        radius: radius,
+                        backgroundImage: const AssetImage("images/brownie.jpg"),
+                      ),
+                      const Text("Brownies",
+                        style: TextStyle(fontSize: 15.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ]),
+                Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: <Widget>[
+                      CircleAvatar(
+                        radius: radius,
+                        backgroundImage: const AssetImage("images/pie.jpg"),
+                      ),
+                      const Text("Pies",
+                        style: TextStyle(fontSize: 15.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ]),
+                Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: <Widget>[
+                      CircleAvatar(
+                        radius: radius,
+                        backgroundImage: const AssetImage("images/cookie.jpg"),
+                      ),
+                      const Text("Cookies",
+                        style: TextStyle(fontSize: 15.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ]),
+              ],
+            ),
+      ]),
+    ));
   }
 }
