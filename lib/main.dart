@@ -175,9 +175,22 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void buttonClicked (){
-    var snackBar = SnackBar( content: Text('Yay! A SnackBar!'),
-        action:SnackBarAction( label:'Hide', onPressed: () {  } ));
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    // var snackBar = SnackBar( content: Text('Yay! A SnackBar!'),
+    //     action:SnackBarAction( label:'Hide', onPressed: () {  } ));
+    // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text('Alert'),
+        content: const Text('Do you want to save your username and password?'),
+        actions: <Widget>[
+              ElevatedButton(onPressed: (){Navigator.pop(context);}, child: Text("OK")),
+              FilledButton(onPressed: (){}, child: Text("Cancel"))
+        ],
+      ),
+    );
   }
+
 
 }
