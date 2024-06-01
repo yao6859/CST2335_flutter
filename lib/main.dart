@@ -150,16 +150,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     labelText: "Password",
                 )),
             ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    var myText = _controller.value.text;
-                    if (myText == "QWERTY123") {
-                      imageSource = "images/idea.png";
-                    } else {
-                      imageSource = "images/stop.png";
-                    }
-                  });
-                },
+                onPressed: buttonClicked,
+                //     () {
+                //   setState(() {
+                //     var myText = _controller.value.text;
+                //     if (myText == "QWERTY123") {
+                //       imageSource = "images/idea.png";
+                //     } else {
+                //       imageSource = "images/stop.png";
+                //     }
+                //   });
+                // },
                 child: const Text("Login", style: TextStyle(fontSize: 25, color: Colors.blue))),
             Image.asset(imageSource, width:200, height:200)
           ],
@@ -172,4 +173,11 @@ class _MyHomePageState extends State<MyHomePage> {
       // ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+
+  void buttonClicked (){
+    var snackBar = SnackBar( content: Text('Yay! A SnackBar!'),
+        action:SnackBarAction( label:'Hide', onPressed: () {  } ));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
 }
