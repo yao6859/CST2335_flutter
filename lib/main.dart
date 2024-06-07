@@ -1,5 +1,5 @@
+import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MyApp());
@@ -36,22 +36,46 @@ class _MyHomePageState extends State<MyHomePage> {
   late TextEditingController _controller1;
   late TextEditingController _controller2;
   var imageSource = "images/question-mark.png";
-  late SharedPreferences savedData;
+  late EncryptedSharedPreferences savedData;
 
   @override
   void initState() {
     super.initState();
     _controller1 = TextEditingController();
     _controller2 = TextEditingController();
-    //Load the file for SharedPreferences, and pass it by the then() lambda function to savedData
-    SharedPreferences.getInstance().then( (result){
-      savedData = result;
-      var loginName = result.getString("Login");
-      if(loginName != null){
+    loadData();
+  }
+
+  //Method to load saved data from EncryptedSharedPreferences
+  Future<void> loadData() async {
+    // Initializing EncryptedSharedPreferences and get the saved data for login and password
+    savedData = EncryptedSharedPreferences();
+    var loginName = await savedData.getString("Login");
+    var passwd = await savedData.getString("Password");
+
+    setState(() {
+      // Updating the TextEditingControllers with the retrieved data
+      if (loginName != "") {
         _controller1.text = loginName;
       }
-    });
+      if (passwd != "") {
+        _controller2.text = passwd;
+      }
 
+      // Show a SnackBar that inform user the saved data is load and ask if they want to clear the data
+      if (loginName != "" || passwd != "") {
+        var snackBar = SnackBar(
+            content: const Text("Your login and password are loaded!"),
+            duration: const Duration(seconds: 8),
+            action: SnackBarAction(label: "Clear saved data", onPressed: () {
+              savedData.clear();
+              _controller1.clear();
+              _controller2.clear();
+            })
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
+    });
   }
 
   @override
@@ -73,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             TextField(controller: _controller1,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                               hintText:"Type here",
                               border: OutlineInputBorder(),
                               labelText: "Login"
@@ -95,25 +119,26 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void buttonClicked (){
-    // var snackBar = SnackBar( content: Text('Yay! A SnackBar!'),
-    //     action:SnackBarAction( label:'Hide', onPressed: () {  } ));
-    // ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
     showDialog<String>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
-        title: const Text('Save data'),
-        content: const Text('Do you want to save your username and password?'),
+        title: const Text('Save Data'),
+        content: const Text('Do you want to save your username and password?', style: TextStyle(fontSize: 20)),
         actions: <Widget>[
-              ElevatedButton(
+              FilledButton(
                   onPressed: (){
-                    var login = _controller1.value.text;
-                    var password = _controller2.value.text;
-                    savedData.setString("Login", login);
+                    savedData.setString("Login", _controller1.value.text);
+                    savedData.setString("Password", _controller2.value.text);
                     Navigator.pop(context);
                     },
-                  child: Text("OK")),
-              FilledButton(onPressed: (){}, child: Text("Cancel"))
+                  child: const Text("YES")),
+              FilledButton(
+                  onPressed: (){
+                    // Clear data saved in the EncryptedSharedPreferences
+                    savedData.clear();
+                    Navigator.pop(context);
+                    },
+                  child: const Text("NO"))
         ],
       ),
     );
