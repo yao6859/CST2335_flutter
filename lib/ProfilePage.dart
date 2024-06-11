@@ -13,10 +13,10 @@ class ProfilePage extends StatefulWidget {
 }
 
 class ProfilePageState extends State<ProfilePage> {
-  late TextEditingController firstNameController;
-  late TextEditingController lastNameController;
-  late TextEditingController phoneController;
-  late TextEditingController emailController;
+  static late TextEditingController firstNameController;
+  static late TextEditingController lastNameController;
+  static late TextEditingController phoneController;
+  static late TextEditingController emailController;
 
   @override
   void initState() {
@@ -30,6 +30,7 @@ class ProfilePageState extends State<ProfilePage> {
 
   @override
   void dispose() {
+    DataRepository.saveData();
     super.dispose();
     firstNameController.dispose();
     lastNameController.dispose();
@@ -47,18 +48,7 @@ class ProfilePageState extends State<ProfilePage> {
 
     setState(() {
       // Updating the TextEditingControllers with the retrieved data
-      if (DataRepository.firstName != "") {
-        firstNameController.text = DataRepository.firstName;
-      }
-      if (DataRepository.lastName != "") {
-        lastNameController.text = DataRepository.lastName;
-      }
-      if (DataRepository.phone != "") {
-        phoneController.text = DataRepository.phone;
-      }
-      if (DataRepository.email != "") {
-        emailController.text = DataRepository.email;
-      }
+      DataRepository.loadData();
 
       // Show a welcome SnackBar
       var snackBar = SnackBar(
@@ -67,11 +57,6 @@ class ProfilePageState extends State<ProfilePage> {
       );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
-  }
-
-  //Method to save data to EncryptedSharedPreferences
-  Future<void> saveData() async {
-
   }
 
 
@@ -95,7 +80,7 @@ class ProfilePageState extends State<ProfilePage> {
                 ))
             ),
             Padding(padding: const EdgeInsets.fromLTRB(10, 0, 10, 10), child:
-              TextField(controller: firstNameController,
+              TextField(controller: lastNameController,
                   decoration: const InputDecoration(
                     hintText:"Type here",
                     border: OutlineInputBorder(),
@@ -119,7 +104,7 @@ class ProfilePageState extends State<ProfilePage> {
             Row(children: <Widget>[
               Flexible(
                   child: Padding(padding: const EdgeInsets.fromLTRB(10, 0, 0, 10), child:
-                  TextField(controller: phoneController,
+                  TextField(controller: emailController,
                       decoration: const InputDecoration(
                         hintText:"Type here",
                         border: OutlineInputBorder(),
