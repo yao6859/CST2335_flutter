@@ -1,5 +1,7 @@
-import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
+
 import 'package:flutter/material.dart';
+import 'package:test_flutter/DataRepository.dart';
+import 'package:test_flutter/ProfilePage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,12 +14,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      title: 'Named Routes Demo',
+      initialRoute: '/pageOne',
+      routes: {
+        '/pageOne': (context) => const MyHomePage(title: 'Login Page'),
+        '/pageTwo': (context) {return const ProfilePage(title: "Profile Page");}
+      },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -36,7 +43,6 @@ class _MyHomePageState extends State<MyHomePage> {
   late TextEditingController _controller1;
   late TextEditingController _controller2;
   var imageSource = "images/question-mark.png";
-  late EncryptedSharedPreferences savedData;
 
   @override
   void initState() {
@@ -48,27 +54,26 @@ class _MyHomePageState extends State<MyHomePage> {
 
   //Method to load saved data from EncryptedSharedPreferences
   Future<void> loadData() async {
-    // Initializing EncryptedSharedPreferences and get the saved data for login and password
-    savedData = EncryptedSharedPreferences();
-    var loginName = await savedData.getString("Login");
-    var passwd = await savedData.getString("Password");
+    // Get the saved data for login and password
+    DataRepository.loginName = await DataRepository.savedData.getString("Login");
+    DataRepository.passwd = await DataRepository.savedData.getString("Password");
 
     setState(() {
       // Updating the TextEditingControllers with the retrieved data
-      if (loginName != "") {
-        _controller1.text = loginName;
+      if (DataRepository.loginName != "") {
+        _controller1.text = DataRepository.loginName;
       }
-      if (passwd != "") {
-        _controller2.text = passwd;
+      if (DataRepository.passwd != "") {
+        _controller2.text = DataRepository.passwd;
       }
 
       // Show a SnackBar that inform user the saved data is load and ask if they want to clear the data
-      if (loginName != "" || passwd != "") {
+      if (DataRepository.loginName != "" || DataRepository.passwd != "") {
         var snackBar = SnackBar(
             content: const Text("Your login and password are loaded!"),
-            duration: const Duration(seconds: 8),
+            duration: const Duration(seconds: 6),
             action: SnackBarAction(label: "Clear saved data", onPressed: () {
-              savedData.clear();
+              DataRepository.savedData.clear();
               _controller1.clear();
               _controller2.clear();
             })
@@ -96,18 +101,22 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            TextField(controller: _controller1,
-                decoration: const InputDecoration(
+            Padding(padding: const EdgeInsets.fromLTRB(10, 10, 10, 0), child:
+              TextField(controller: _controller1,
+                  decoration: const InputDecoration(
                               hintText:"Type here",
                               border: OutlineInputBorder(),
                               labelText: "Login"
-                  )),
-            TextField(controller: _controller2, obscureText: true,
-                decoration: const InputDecoration(
-                    hintText:"Type here",
-                    border: OutlineInputBorder(),
-                    labelText: "Password",
-                )),
+                  ))
+            ),
+            Padding(padding: const EdgeInsets.fromLTRB(10, 10, 10, 10), child:
+              TextField(controller: _controller2, obscureText: true,
+                  decoration: const InputDecoration(
+                              hintText:"Type here",
+                              border: OutlineInputBorder(),
+                              labelText: "Password",
+                ))
+            ),
             ElevatedButton(
                 onPressed: buttonClicked,
                 child: const Text("Login", style: TextStyle(fontSize: 25, color: Colors.blue))),
@@ -126,17 +135,23 @@ class _MyHomePageState extends State<MyHomePage> {
         content: const Text('Do you want to save your username and password?', style: TextStyle(fontSize: 20)),
         actions: <Widget>[
               FilledButton(
-                  onPressed: (){
-                    savedData.setString("Login", _controller1.value.text);
-                    savedData.setString("Password", _controller2.value.text);
+                  onPressed: () {
+                    DataRepository.savedData.setString("Login", _controller1.value.text);
+                    DataRepository.savedData.setString("Password", _controller2.value.text);
                     Navigator.pop(context);
-                    },
+                    if (_controller1.value.text == 'yi' && _controller2.value.text == 'password') {
+                      Navigator.pushNamed(context, '/pageTwo');
+                    }
+                  },
                   child: const Text("YES")),
               FilledButton(
                   onPressed: (){
                     // Clear data saved in the EncryptedSharedPreferences
-                    savedData.clear();
                     Navigator.pop(context);
+                    if (_controller1.value.text == 'yi' && _controller2.value.text == 'password') {
+                      Navigator.pushNamed(context, '/pageTwo');
+                    }
+                    DataRepository.savedData.clear();
                     },
                   child: const Text("NO"))
         ],
