@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'DataRepository.dart';
 
@@ -98,8 +99,12 @@ class ProfilePageState extends State<ProfilePage> {
                             )),
                           )
                 ),
-                IconButton(onPressed: () {}, icon: const Icon(Icons.phone)),
-                IconButton(onPressed: () {}, icon: const Icon(Icons.message))
+                IconButton(onPressed: () {
+                  _launchPhoneDialer();
+                }, icon: const Icon(Icons.phone)),
+                IconButton(onPressed: () {
+                  _launchMessageApp();
+                }, icon: const Icon(Icons.message))
             ]),
             Row(children: <Widget>[
               Flexible(
@@ -112,10 +117,65 @@ class ProfilePageState extends State<ProfilePage> {
                       )),
                   )
               ),
-                IconButton(onPressed: () {}, icon: const Icon(Icons.email))
+                IconButton(onPressed: () {
+                  _launchEmailApp();
+                }, icon: const Icon(Icons.email))
             ]),
         ]),
       ),
     );
   }
+
+  void _launchPhoneDialer() async {
+    final phoneNumber = phoneController.text;
+    final url = 'tel:$phoneNumber';
+
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      _showAlertDialog();
+    }
+  }
+
+  void _launchMessageApp() async {
+    final phoneNumber = phoneController.text;
+    final url = 'sms:$phoneNumber';
+
+    if (await canLaunch(url)) {
+    await launch(url);
+    } else {
+    _showAlertDialog();
+    }
+  }
+
+  void _launchEmailApp() async {
+    final email = emailController.text;
+    final url = 'mailto:$email';
+
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      _showAlertDialog();
+    }
+  }
+
+  void _showAlertDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Error'),
+          content: const Text('Could not launch, the URL is not supported on this device.'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              }),
+          ]);
+      });
+  }
+
+
+
 }
