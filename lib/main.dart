@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'ToDoDatabase.dart';
+import 'ToDoItem.dart';
+import 'ToDoItemDao.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -35,12 +39,25 @@ class _MyHomePageState extends State<MyHomePage> {
   var isChecked = false;
   late TextEditingController _controller;
   late TextEditingController _controller2;
+  late ToDoItemDao toDoItemDao;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController();
     _controller2 = TextEditingController();
+    _initializeDatabase();
+  }
+
+  Future<void> _initializeDatabase() async {
+    final database = await $FloorToDoDatabase.databaseBuilder('todo_database.db').build();
+    toDoItemDao = database.toDoItemDao;
+    // retrieve items from database
+    toDoItemDao.findAllToDoItem().then((listOfItem) {
+      setState(() {
+        words.addAll(listOfItem);
+      });
+    });
   }
 
   @override
@@ -79,7 +96,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: const Text("Add"),
                     onPressed: () {
                       setState(() {
-                        words.add(_controller.text);
+                        var newItem = _controller.value.text;
+                        // create the object of type ToDoItem, using dynamically generated id
+                        var todo = ToDoItem(ToDoItem.ID++, newItem);
+                        // add the new item to page
+                        words.add(todo);
+                        // add the new item to database
+                        toDoItemDao.insertToDoItem(todo);
+
                         _controller.clear();
                       });
                     }),
@@ -107,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             fontSize: 20.0,
                           )),
                         Text(
-                          words[rowNum],
+                          words[rowNum].item,
                           style: const TextStyle(
                             fontSize: 20.0,
                           )),
@@ -143,7 +167,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ));
   }
 
-  List<String> words = [ ];
+  List<ToDoItem> words = [ ];
   // var wordsArray = <String>[ ]; //Another way to create a array
 
 }
