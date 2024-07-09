@@ -10,5 +10,10 @@ class ToDoItem {
 
   final String item;
 
-  ToDoItem(this.id, this.item);
+  ToDoItem(this.id, this.item)
+  {
+    if(id > ID) {
+      ID = id + 1;
+    }
+  }
 }

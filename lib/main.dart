@@ -145,6 +145,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           actions: <Widget>[
                             ElevatedButton(onPressed: () {
                                 setState(() {
+                                  // remove form database
+                                  toDoItemDao.deleteToDoItem(words[rowNum]);
+                                  // remove from page
                                   words.removeAt(rowNum);
                                 });
                                 Navigator.pop(context);
