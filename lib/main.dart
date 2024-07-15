@@ -75,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(10, 50, 10, 20),
+              padding: const EdgeInsets.fromLTRB(30, 50, 30, 20),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -256,6 +256,17 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child:
+                OutlinedButton(onPressed: () {
+                  setState(() {
+                    selectedItem = null;
+                  });
+                }, child: const Text("Back"))
+          )
+        ],
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
